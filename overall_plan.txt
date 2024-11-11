@@ -1,0 +1,44 @@
+Needs:
+'duration' class to store the duration of a 'Track', 'album' or 'album collection'
+	this class should have 3 int variables, (hr, min, seconds)
+	this class must implement the 'Comparable' interface (its a sorting algorithm)
+
+'Track' class to store the details of an album track.
+	this class should have 2 variables, (Title, Duration)
+
+'Album' class to store the detail of a album.
+	this class should have 3 variables, (artist, title, album)
+
+'AlbumCollection' class to store the details of a collection of music albums.
+	this class should have 1 variable, (member)
+	where the variable 'member' is just a collection of album objects
+	this class should have the UI to answer "general queries regarding the content of the collection"
+
+where each of these 4 classes should be their own separate .java file
+and each class should have an appropriate set of getter/constructor functions
+overwrite the "toString" method.
+
+
+
+
+
+
+
+
+
+
+
+extra notes/project ideas:
+under album the variable album could just be a pointer to the album?????? idk got confused
+
+the queries might be  selection like such:
+1)
+select song by either
+1. title
+2. artist
+3. album
+4. length
+
+
+2)
+what is the (title|artist|album|length):
