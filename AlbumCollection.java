@@ -1,7 +1,8 @@
 import java.util.List;
 
 public class AlbumCollection {
-    private List<Album> collection_album_objects;
+    //vs code was suggesting this to be final
+    private final List<Album> collection_album_objects;
 
     public AlbumCollection(List<Album> object){
         this.collection_album_objects = object;

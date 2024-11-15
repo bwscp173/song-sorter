@@ -14,7 +14,7 @@ public class file_reader{
     public void output_file(){
         // code copied and then modified from https://www.w3schools.com/java/java_files_read.asp
         try {
-            File myObj = new File(this.file_name);
+            File myObj = new File(this.file_name);  // changed the filename
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
@@ -33,12 +33,12 @@ public class file_reader{
 
         // code copied and then modified from https://www.w3schools.com/java/java_files_read.asp
         try {
-            File myObj = new File(this.file_name);
+            File myObj = new File(this.file_name);  // changed the filename
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String current_line = myReader.nextLine();
                 
-                contents.add(current_line);
+                contents.add(current_line);  // added this line
 
             }
             myReader.close();
