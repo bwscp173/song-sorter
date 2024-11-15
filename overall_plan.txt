@@ -10,7 +10,7 @@ Needs:
 	this class should have 3 variables, (artist, title, album)
 
 'AlbumCollection' class to store the details of a collection of music albums.
-	this class should have 1 variable, (member)
+	this class should have 1 variable, (Album-objects)
 	where the variable 'member' is just a collection of album objects
 	this class should have the UI to answer "general queries regarding the content of the collection"
 
