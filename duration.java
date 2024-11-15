@@ -21,4 +21,9 @@ public class duration {
     public int get_sec(){
         return this.sec;
     }
+
+    @Override
+    public String toString(){
+        return this.hr + ":" + this.min + ":" + this.sec;
+    }
 }

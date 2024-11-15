@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class main{
+public class AlbumDatabase {
     public static void main(String[] args) {
         file_reader fr = new file_reader("albums.txt");
         System.out.println("file_reader: " + fr.file_name);

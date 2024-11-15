@@ -23,4 +23,9 @@ public class Album {
     public String get_album(){
         return this.album;
     }
+
+    @Override
+    public String toString(){
+        return this.album + " : " + this.title;
+    }
 }

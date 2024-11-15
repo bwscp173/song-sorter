@@ -1,28 +1,31 @@
 Needs:
 'duration' class to store the duration of a 'Track', 'album' or 'album collection'
-	this class should have 3 int variables, (hr, min, seconds)
+	DONE	this class should have 3 int variables, (hr, min, seconds)
 	this class must implement the 'Comparable' interface (its a sorting algorithm)
 
 'Track' class to store the details of an album track.
-	this class should have 2 variables, (Title, Duration)
+	DONE	this class should have 2 variables, (Title, Duration)
 
 'Album' class to store the detail of a album.
-	this class should have 3 variables, (artist, title, album)
+	DONE	class should have 3 variables, (artist, title, album)
 
 'AlbumCollection' class to store the details of a collection of music albums.
-	this class should have 1 variable, (Album-objects)
-	where the variable 'member' is just a collection of album objects
+	DONE	this class should have 1 variable, (Album-objects)
+	i think this is done i forgor 	where the variable 'member' is just a collection of album objects
 	this class should have the UI to answer "general queries regarding the content of the collection"
 
 where each of these 4 classes should be their own separate .java file
 and each class should have an appropriate set of getter/constructor functions
 overwrite the "toString" method.
 
+'Albumdatabase' class to store the main function.
+	this class will read albums.txt
 
 
 
 
-
+other notes:
+move main function inside main.java to "albumdatabase.java"
 
 
 
@@ -42,3 +45,7 @@ select song by either
 
 2)
 what is the (title|artist|album|length):
+
+3)
+not allowed to use GUI, was going to use a GUI to nicely display the information to the user
+but as only the console output is used by pass when making the pdf to use.

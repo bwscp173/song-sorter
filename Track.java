@@ -13,4 +13,9 @@ public class Track {
     public void set_title(String new_title){
         this.title = new_title;
     }
+
+    @Override
+    public String toString(){
+        return "";
+    }
 }
