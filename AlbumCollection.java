@@ -1,10 +1,10 @@
-import java.util.List;
+import java.util.ArrayList;
 
 public class AlbumCollection {
     //vs code was suggesting this to be final
-    private final List<Album> collection_album_objects;
+    private final ArrayList<Album> collection_album_objects;
 
-    public AlbumCollection(List<Album> object){
+    public AlbumCollection(ArrayList<Album> object){
         this.collection_album_objects = object;
     }
 
@@ -12,7 +12,7 @@ public class AlbumCollection {
         this.collection_album_objects.add(album_object);
     }
 
-    public List<Album> get_Albums(){
+    public ArrayList<Album> get_Albums(){
         return this.collection_album_objects;
     }
 }
