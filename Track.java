@@ -16,6 +16,6 @@ public class Track {
 
     @Override
     public String toString(){
-        return "";
+        return this.duration_object.toString() + " - " + this.title;
     }
 }

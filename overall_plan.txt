@@ -12,7 +12,7 @@ Needs:
 'AlbumCollection' class to store the details of a collection of music albums.
 	DONE	this class should have 1 variable, (Album-objects)
 	i think this is done i forgor 	where the variable 'member' is just a collection of album objects
-	this class should have the UI to answer "general queries regarding the content of the collection"
+
 
 where each of these 4 classes should be their own separate .java file
 and each class should have an appropriate set of getter/constructor functions
@@ -25,8 +25,8 @@ overwrite the "toString" method.
 
 
 other notes:
-move main function inside main.java to "albumdatabase.java"
-
+DONE move main function inside main.java to "albumdatabase.java"
+to find the first instance of a space. go back 2 chars this will be a ":" meaning its a song. if there is no ":" then its a album
 
 
 
