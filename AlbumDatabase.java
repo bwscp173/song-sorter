@@ -4,16 +4,34 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class AlbumDatabase {
+    private String file_name;
+
+    public AlbumDatabase(String filename){
+        this.file_name = filename;
+    }
+
     public static void main(String[] args) {
-        AlbumDatabase fr = new AlbumDatabase("albums.txt");
+        AlbumDatabase fr = new AlbumDatabase("albums.txt");  //fr for file_reader
         System.out.println("Reading from file: " + fr.file_name);
-        //fr.output_file();
         ArrayList<String> file_contents = new ArrayList<String>(fr.get_file_content());
+        
+        // variables for the track obj
         int first_space_index;
         String title;
 
+        // variables for the album obj
+        String album_artist;
+        String album_title;
+        int album_year;
+
+        // i have to use placeholder text so the object can be initialised so java will compile it even though
+        // it gets overwritten immediatly by the if album statement
+        Album current_album = new Album("PLACEHOLDER", "PLACEHOLDER", 9999);  // stores the most recently seen album to append the track to
+        AlbumCollection all_albums = new AlbumCollection();
+
         for (int i=0; i<file_contents.size();i++){
             String current_line = file_contents.get(i);
+            
 
             // The Beatles : Rubber Soul (1965)
             // 0:02:25 - Drive My Car
@@ -22,7 +40,7 @@ public class AlbumDatabase {
             // else it will be a artists name
             // doing it this way because of a small edge case where the artists name starts with a number so we cant check if the first character is a number
             // cant check the location of the string for a ":" at a static position because there is a small edge case for a +10hr song/albumcollection.
-            // 
+            
             first_space_index = current_line.indexOf(" ");
             if (current_line.charAt(first_space_index-3) == ':'){
                 // it must be a track
@@ -39,8 +57,7 @@ public class AlbumDatabase {
                 total_time = new String(total_time.substring(total_time.indexOf(":")));
                 // total_time_example: ":38"
                 
-                int sec = Integer.parseInt(total_time.substring(1));
-                total_time = new String(total_time.substring(1));
+                int sec = Integer.parseInt(total_time.substring(1));  // just cuts the ":" and everything else is just the seconds.
 
 
                 // now getting the title
@@ -50,28 +67,32 @@ public class AlbumDatabase {
 
                 //making of the Track_obj
                 Track line_track_obj = new Track(line_duration_obj,title);
-                System.out.println("line_track_obj.toString():  "+line_track_obj.toString());
-
-                //int min = current_line.substring(i)
-                //duration line_duration_obj = new duration(current_line[first_space_index])
-                //public duration(int hr,int min,int sec)
+                current_album.add_track_obj(line_track_obj);
 
             
             }
             else{
-                // it must be a album
-                ;
+                // else it must be a album
+                
+                //gets everything upto the " : "
+                album_artist = new String(current_line.substring(0,current_line.indexOf(" : ")));
+                
+                //gets everything between the " : " and the start of the bracket used in year
+                album_title = new String(current_line.substring(current_line.indexOf(" : ") + 3, current_line.indexOf(" (")));
+
+                //gets everything between the brackets
+                album_year = Integer.parseInt(current_line.substring(current_line.indexOf(" (") + 2, current_line.indexOf(")")));
+
+
+                current_album = new Album(album_artist, album_title, album_year);
+                all_albums.add_album_object(current_album);
+                // as its done by object the pointer inside the AlbumCollection class should get the data when its appended. instead of adding the data first then appending.
             }
         }
     }
 
-    public String file_name;
-
-    public AlbumDatabase(String filename){
-        this.file_name = filename;
-    }
-
     public void output_file(){
+        // function isnt used much anymore, just for de-bugging at the start of the project.
         // code copied and then modified from https://www.w3schools.com/java/java_files_read.asp
         try {
             File myObj = new File(this.file_name);  // changed the filename

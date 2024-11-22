@@ -1,6 +1,6 @@
 public class Track {
-    public duration duration_object;
-    public String title;
+    private duration duration_object;
+    private String title;
     
     public Track(duration duration_object, String title){
         this.duration_object = duration_object;
