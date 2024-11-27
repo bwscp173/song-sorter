@@ -6,26 +6,66 @@ import java.util.Scanner;
 public class AlbumDatabase {
     private String file_name;
 
+
     public AlbumDatabase(String filename){
         this.file_name = filename;
+    }
+
+    // fun fact: there is a difference between 'boolean' and 'Boolean'. Boolean can hold a null value as its a object
+    public static boolean is_track(String line, int first_space_index){
+        return line.charAt(first_space_index-3) == ':';
+    }
+
+    //will return the hr,min,seconds,title
+    public static void handle_track(String current_line, int first_space_index, Album current_album){
+        // getting the hour min secons dynamically (so its more resistant to hrs larger than 9)
+        String total_time = new String(current_line.substring(0,first_space_index));
+        // total_time example:  "0:00:38"
+
+        int hr = Integer.parseInt(total_time.substring(0,total_time.indexOf(":")));
+        total_time = new String(total_time.substring(total_time.indexOf(":")+1));
+        // total_time_example: "00:38"
+        
+        int min = Integer.parseInt(total_time.substring(0,total_time.indexOf(":")));
+        total_time = new String(total_time.substring(total_time.indexOf(":")));
+        // total_time_example: ":38"
+        
+        int sec = Integer.parseInt(total_time.substring(1));  // just cuts the ":" and everything else is just the seconds.
+
+
+        // now getting the title
+        String title = new String(current_line.substring(current_line.indexOf(" - ") + 3));  // finds the gap between the time and title, adds 3 because the string to find is 3 long, removes everything before that point.
+        duration line_duration_obj = new duration(hr, min, sec);
+
+
+        //making of the Track_obj
+        Track line_track_obj = new Track(line_duration_obj,title);
+        current_album.add_track_obj(line_track_obj);
+    }
+
+    public static void handle_album(String current_line, AlbumCollection all_albums){
+        //gets everything upto the " : "
+        String album_artist = new String(current_line.substring(0,current_line.indexOf(" : ")));
+                
+        //gets everything between the " : " and the start of the bracket used in year
+        String album_title = new String(current_line.substring(current_line.indexOf(" : ") + 3, current_line.indexOf(" (")));
+
+        //gets everything between the brackets
+        Integer album_year = Integer.parseInt(current_line.substring(current_line.indexOf(" (") + 2, current_line.indexOf(")")));
+
+
+        Album current_album = new Album(album_artist, album_title, album_year);
+        all_albums.add_album_object(current_album);
+        // as its done by object the pointer inside the AlbumCollection class should get the data when its appended. instead of adding the data first then appending.
     }
 
     public static void main(String[] args) {
         AlbumDatabase fr = new AlbumDatabase("albums.txt");  //fr for file_reader
         System.out.println("Reading from file: " + fr.file_name);
         ArrayList<String> file_contents = new ArrayList<String>(fr.get_file_content());
-        
-        // variables for the track obj
-        int first_space_index;
-        String title;
 
-        // variables for the album obj
-        String album_artist;
-        String album_title;
-        int album_year;
-
-        // i have to use placeholder text so the object can be initialised so java will compile it even though
-        // it gets overwritten immediatly by the if album statement
+        // i have to use placeholder text so the object can be initialised so java will compile it. even though
+        // it gets overwritten immediatly by the else statement
         Album current_album = new Album("PLACEHOLDER", "PLACEHOLDER", 9999);  // stores the most recently seen album to append the track to
         AlbumCollection all_albums = new AlbumCollection();
 
@@ -41,52 +81,19 @@ public class AlbumDatabase {
             // doing it this way because of a small edge case where the artists name starts with a number so we cant check if the first character is a number
             // cant check the location of the string for a ":" at a static position because there is a small edge case for a +10hr song/albumcollection.
             
-            first_space_index = current_line.indexOf(" ");
-            if (current_line.charAt(first_space_index-3) == ':'){
-                // it must be a track
-                
-                // getting the hour min secons dynamically (so its more resistant to hrs larger than 9)
-                String total_time = new String(current_line.substring(0,first_space_index));
-                // total_time example:  "0:00:38"
-
-                int hr = Integer.parseInt(total_time.substring(0,total_time.indexOf(":")));
-                total_time = new String(total_time.substring(total_time.indexOf(":")+1));
-                // total_time_example: "00:38"
-                
-                int min = Integer.parseInt(total_time.substring(0,total_time.indexOf(":")));
-                total_time = new String(total_time.substring(total_time.indexOf(":")));
-                // total_time_example: ":38"
-                
-                int sec = Integer.parseInt(total_time.substring(1));  // just cuts the ":" and everything else is just the seconds.
-
-
-                // now getting the title
-                title = new String(current_line.substring(current_line.indexOf(" - ") + 3));  // finds the gap between the time and title, adds 3 because the string to find is 3 long, removes everything before that point.
-                duration line_duration_obj = new duration(hr, min, sec);
-
-
-                //making of the Track_obj
-                Track line_track_obj = new Track(line_duration_obj,title);
-                current_album.add_track_obj(line_track_obj);
-
             
+            // todo: decide if this first_space index should be put into the is_track and handle_track functions
+            // as it looks nicer if its put inside the function not as a augument, But its wasted data if it is.
+            int first_space_index = current_line.indexOf(" ");
+            if (is_track(current_line, first_space_index)){
+                // it must be a track                
+                handle_track(current_line, first_space_index, current_album);
+
             }
             else{
                 // else it must be a album
-                
-                //gets everything upto the " : "
-                album_artist = new String(current_line.substring(0,current_line.indexOf(" : ")));
-                
-                //gets everything between the " : " and the start of the bracket used in year
-                album_title = new String(current_line.substring(current_line.indexOf(" : ") + 3, current_line.indexOf(" (")));
+                handle_album(current_line, all_albums);
 
-                //gets everything between the brackets
-                album_year = Integer.parseInt(current_line.substring(current_line.indexOf(" (") + 2, current_line.indexOf(")")));
-
-
-                current_album = new Album(album_artist, album_title, album_year);
-                all_albums.add_album_object(current_album);
-                // as its done by object the pointer inside the AlbumCollection class should get the data when its appended. instead of adding the data first then appending.
             }
         }
     }
