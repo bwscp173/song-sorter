@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Collections;
 
 public class AlbumDatabase {
     private String file_name;
@@ -96,6 +97,17 @@ public class AlbumDatabase {
 
             }
         }
+        //print each album in all_albums, arranging the songs into alphabetical order using comparable
+        ArrayList<Album> all_albums_list = all_albums.get_Albums();
+        for (Album album : all_albums_list){
+            System.out.println(album.get_artist() + " : " + album.get_title() + " (" + album.get_year() + ")");
+            ArrayList<Track> tracks = album.get_track_obj();
+            Collections.sort(tracks, (track1, track2) -> track1.compareTo(track2));
+            for (Track track : tracks){
+                System.out.println("\t" + track.get_duration() + " - " + track.get_title());
+            }
+        }
+        
     }
 
     public void output_file(){

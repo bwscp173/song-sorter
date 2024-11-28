@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Album {
+public class Album implements Comparable<Album> {
     // vs code suggested that these should be final
     private final String artist;
     private final String title;  // will use the tostring method to collect the title from the track object
@@ -30,6 +30,24 @@ public class Album {
         this.track_obj.add(track_obj);
     }
 
+    
+    public ArrayList<Track> get_track_obj(){
+        return this.track_obj;
+    }
+    
+
+    @Override
+    public int compareTo(Album other){
+        if(this.artist.compareTo(other.get_artist()) != 0){
+            return this.artist.compareTo(other.get_artist());
+        }
+        else if(this.year != other.get_year()){
+            return Integer.compare(this.year, other.get_year());
+        }
+        else{
+            return this.title.compareTo(other.get_title());
+        }
+    }
     @Override
     public String toString(){
         return this.artist + " : " + this.title + " (" + this.year + ")";

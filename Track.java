@@ -1,4 +1,4 @@
-public class Track {
+public class Track implements Comparable<Track>{
     private duration duration_object;
     private String title;
     
@@ -12,6 +12,17 @@ public class Track {
     }
     public void set_title(String new_title){
         this.title = new_title;
+    }
+
+    public duration get_duration(){
+        return this.duration_object;
+    }
+
+    @Override
+    public int compareTo(Track other) {
+        // compare this track with the other track
+        // for example, compare by title
+        return this.get_title().compareTo(other.get_title());
     }
 
     @Override
