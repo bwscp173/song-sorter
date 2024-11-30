@@ -1,8 +1,8 @@
 public class Track implements Comparable<Track>{
-    private duration duration_object;
+    private Duration duration_object;
     private String title;
     
-    public Track(duration duration_object, String title){
+    public Track(Duration duration_object, String title){
         this.duration_object = duration_object;
         this.title = title;
     }
@@ -14,7 +14,7 @@ public class Track implements Comparable<Track>{
         this.title = new_title;
     }
 
-    public duration get_duration(){
+    public Duration get_duration(){
         return this.duration_object;
     }
 

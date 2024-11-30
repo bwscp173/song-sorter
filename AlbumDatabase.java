@@ -1,8 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class AlbumDatabase {
     private String file_name;
@@ -13,8 +13,15 @@ public class AlbumDatabase {
     }
 
     // fun fact: there is a difference between 'boolean' and 'Boolean'. Boolean can hold a null value as its a object
-    public static boolean is_track(String line, int first_space_index){
-        return line.charAt(first_space_index-3) == ':';
+    public static Boolean is_track(String line, int first_space_index){
+        try {
+            return line.charAt(first_space_index-3) == ':';
+            }
+        catch (Exception e) {
+            // if the return in null then it will skip over the current line
+            return null;
+        }
+        
     }
 
     //will return the hr,min,seconds,title
@@ -36,7 +43,7 @@ public class AlbumDatabase {
 
         // now getting the title
         String title = new String(current_line.substring(current_line.indexOf(" - ") + 3));  // finds the gap between the time and title, adds 3 because the string to find is 3 long, removes everything before that point.
-        duration line_duration_obj = new duration(hr, min, sec);
+        Duration line_duration_obj = new Duration(hr, min, sec);
 
 
         //making of the Track_obj
@@ -61,50 +68,91 @@ public class AlbumDatabase {
     }
 
     public static void main(String[] args) {
-        AlbumDatabase fr = new AlbumDatabase("albums.txt");  //fr for file_reader
-        System.out.println("Reading from file: " + fr.file_name);
-        ArrayList<String> file_contents = new ArrayList<String>(fr.get_file_content());
+        FileLocator file_handler = new FileLocator();
+        file_handler.set_extension(".txt");
+        File current_dir = new File("."); // the path being "." means current directory
+        String[] all_files = file_handler.ListFiles();
+        ArrayList<String> all_txts = new ArrayList<String>();
 
-        // i have to use placeholder text so the object can be initialised so java will compile it. even though
-        // it gets overwritten immediatly by the else statement
-        Album current_album = new Album("PLACEHOLDER", "PLACEHOLDER", 9999);  // stores the most recently seen album to append the track to
-        AlbumCollection all_albums = new AlbumCollection();
-
-        for (int i=0; i<file_contents.size();i++){
-            String current_line = file_contents.get(i);
-            
-
-            // The Beatles : Rubber Soul (1965)
-            // 0:02:25 - Drive My Car
-            // for example these next lines will check for the first space starting from the left.
-            // then it will go back 3 characters, if this is a ':' then it has to be a song
-            // else it will be a artists name
-            // doing it this way because of a small edge case where the artists name starts with a number so we cant check if the first character is a number
-            // cant check the location of the string for a ":" at a static position because there is a small edge case for a +10hr song/albumcollection.
-            
-            
-            // todo: decide if this first_space index should be put into the is_track and handle_track functions
-            // as it looks nicer if its put inside the function not as a augument, But its wasted data if it is.
-            int first_space_index = current_line.indexOf(" ");
-            if (is_track(current_line, first_space_index)){
-                // it must be a track                
-                handle_track(current_line, first_space_index, current_album);
-
-            }
-            else{
-                // else it must be a album
-                handle_album(current_line, all_albums);
-
+        for(int i = 0; i < all_files.length; i++) {
+            //System.out.println("file: " + all_files[i]);
+            if (file_handler.accept(current_dir,all_files[i])){
+                System.out.println("adding file: " + all_files[i]);
+                all_txts.add(all_files[i]);
             }
         }
-        //print each album in all_albums, arranging the songs into alphabetical order using comparable
-        ArrayList<Album> all_albums_list = all_albums.get_Albums();
-        for (Album album : all_albums_list){
-            System.out.println(album.get_artist() + " : " + album.get_title() + " (" + album.get_year() + ")");
-            ArrayList<Track> tracks = album.get_track_obj();
-            Collections.sort(tracks, (track1, track2) -> track1.compareTo(track2));
-            for (Track track : tracks){
-                System.out.println("\t" + track.get_duration() + " - " + track.get_title());
+
+        for (int i = 0; i < all_txts.size(); i++) {
+            
+            
+            AlbumDatabase fr = new AlbumDatabase(all_txts.get(i));  //fr for file_reader
+            System.out.println("Reading from file: " + fr.file_name);
+            ArrayList<String> file_contents = new ArrayList<String>(fr.get_file_content());
+
+            // i have to use placeholder text so the object can be initialised so java will compile it. even though
+            // it gets overwritten immediatly by the else statement
+            Album current_album = new Album("PLACEHOLDER", "PLACEHOLDER", 9999);  // stores the most recently seen album to append the track to
+            AlbumCollection all_albums = new AlbumCollection();
+
+            for (int j=0; j<file_contents.size();j++){
+                String current_line = file_contents.get(j);
+
+                if (current_line.length() == 0){
+                    continue;
+                }
+                
+
+                // The Beatles : Rubber Soul (1965)
+                // 0:02:25 - Drive My Car
+                // for example these next lines will check for the first space starting from the left.
+                // then it will go back 3 characters, if this is a ':' then it has to be a song
+                // else it will be a artists name
+                // doing it this way because of a small edge case where the artists name starts with a number so we cant check if the first character is a number
+                // cant check the location of the string for a ":" at a static position because there is a small edge case for a +10hr song/albumcollection.
+                
+                
+                // todo: decide if this first_space index should be put into the is_track and handle_track functions
+                // as it looks nicer if its put inside the function not as a augument, But its wasted data if it is.
+                int first_space_index = current_line.indexOf(" ");
+
+                
+                // if the line is empty, ignore the line
+                if(is_track(current_line, first_space_index) == null){
+                    continue;
+                }
+
+
+                else if (is_track(current_line, first_space_index) == true){
+                    // it must be a track
+                    try {
+                        handle_track(current_line, first_space_index, current_album);
+                    }
+                    catch (java.lang.StringIndexOutOfBoundsException e) {
+                        // this error occurs because the first_space_index 
+                        System.out.println("[ERROR] Line(" + j + ") from file('" + fr.file_name + "'') is in a incorrect format");
+                    }
+                }
+
+                else if (is_track(current_line, first_space_index) == false){
+                    // else it must be a album
+                    try {
+                        handle_album(current_line, all_albums);
+                    }
+                    catch (java.lang.StringIndexOutOfBoundsException e) {
+                        System.out.println("[ERROR] Line(" + j + ") from file('" + fr.file_name + "') is in a incorrect format");
+                    }
+                }
+            }
+            
+            //print each album in all_albums, arranging the songs into alphabetical order using comparable
+            ArrayList<Album> all_albums_list = all_albums.get_Albums();
+            for (Album album : all_albums_list){
+                System.out.println(album.get_artist() + " : " + album.get_title() + " (" + album.get_year() + ")");
+                ArrayList<Track> tracks = album.get_track_obj();
+                Collections.sort(tracks, (track1, track2) -> track1.compareTo(track2));
+                for (Track track : tracks){
+                    System.out.println("\t" + track.get_duration() + " - " + track.get_title());
+                }
             }
         }
         
