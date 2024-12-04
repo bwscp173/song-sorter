@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Scanner;
 
 public class AlbumDatabase {
-    private String file_name;
+    private final String file_name;
 
 
     public AlbumDatabase(String filename){
@@ -43,15 +43,15 @@ public class AlbumDatabase {
 
         // now getting the title
         String title = new String(current_line.substring(current_line.indexOf(" - ") + 3));  // finds the gap between the time and title, adds 3 because the string to find is 3 long, removes everything before that point.
-        duration line_duration_obj = new duration(hr, min, sec);
-
+        Duration line_duration_obj = new Duration(hr, min, sec);
 
         //making of the Track_obj
         Track line_track_obj = new Track(line_duration_obj,title);
+        //System.out.println("addign track obj" + line_duration_obj.toString());
         current_album.add_track_obj(line_track_obj);
     }
 
-    public static void handle_album(String current_line, AlbumCollection all_albums){
+    public static Album handle_album(String current_line, AlbumCollection all_albums){
         //gets everything upto the " : "
         String album_artist = new String(current_line.substring(0,current_line.indexOf(" : ")));
                 
@@ -64,6 +64,7 @@ public class AlbumDatabase {
 
         Album current_album = new Album(album_artist, album_title, album_year);
         all_albums.add_album_object(current_album);
+        return current_album;
         // as its done by object the pointer inside the AlbumCollection class should get the data when its appended. instead of adding the data first then appending.
     }
 
@@ -136,7 +137,7 @@ public class AlbumDatabase {
                 else if (is_track(current_line, first_space_index) == false){
                     // else it must be a album
                     try {
-                        handle_album(current_line, all_albums);
+                        current_album = handle_album(current_line, all_albums);
                     }
                     catch (java.lang.StringIndexOutOfBoundsException e) {
                         System.out.println("[ERROR] Line(" + j + ") from file('" + fr.file_name + "') is in a incorrect format");
@@ -147,11 +148,13 @@ public class AlbumDatabase {
             //print each album in all_albums, arranging the songs into alphabetical order using comparable
             ArrayList<Album> all_albums_list = all_albums.get_Albums();
             for (Album album : all_albums_list){
-                System.out.println(album.get_artist() + " : " + album.get_title() + " (" + album.get_year() + ")");
+                System.out.println("\n" + album.toString());
+
                 ArrayList<Track> tracks = album.get_track_obj();
                 Collections.sort(tracks, (track1, track2) -> track1.compareTo(track2));
+                
                 for (Track track : tracks){
-                    System.out.println("\t" + track.get_duration() + " - " + track.get_title());
+                    System.out.println("\t" + track.toString());
                 }
             }
         }
