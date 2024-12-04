@@ -43,7 +43,7 @@ public class AlbumDatabase {
 
         // now getting the title
         String title = new String(current_line.substring(current_line.indexOf(" - ") + 3));  // finds the gap between the time and title, adds 3 because the string to find is 3 long, removes everything before that point.
-        Duration line_duration_obj = new Duration(hr, min, sec);
+        duration line_duration_obj = new duration(hr, min, sec);
 
 
         //making of the Track_obj
