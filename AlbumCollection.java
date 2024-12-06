@@ -3,10 +3,10 @@ import java.util.ArrayList;
 public class AlbumCollection {
     //vs code was suggesting this to be final
     private final ArrayList<Album> collection_album_objects;
-    private Duration duration_obj;
+    private final Duration duration_obj;
 
     public AlbumCollection(){
-        this.collection_album_objects = new ArrayList<Album>();
+        this.collection_album_objects = new ArrayList<>();
         this.duration_obj = new Duration(0, 0, 0);
     }
 

@@ -4,7 +4,7 @@ import java.io.FilenameFilter;
 
 public class FileLocator implements FilenameFilter{
     private String extension;
-    public void FileLocator(){
+    public FileLocator(){
         this.extension = "";
     }
 

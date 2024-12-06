@@ -1,5 +1,5 @@
 public class Track implements Comparable<Track>{
-    private Duration duration_object;
+    private final Duration duration_object;
     private String title;
     
     public Track(Duration duration_object, String title){

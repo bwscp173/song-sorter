@@ -59,8 +59,8 @@ public class AlbumDatabase {
         String album_title = new String(current_line.substring(current_line.indexOf(" : ") + 3, current_line.indexOf(" (")));
 
         //gets everything between the brackets
-        Integer album_year = Integer.parseInt(current_line.substring(current_line.indexOf(" (") + 2, current_line.indexOf(")")));
-
+        int album_year = Integer.parseInt(current_line.substring(current_line.indexOf(" (") + 2, current_line.indexOf(")")));
+    
 
         Album current_album = new Album(album_artist, album_title, album_year);
         all_albums.add_album_object(current_album);
@@ -73,13 +73,13 @@ public class AlbumDatabase {
         file_handler.set_extension(".txt");
         File current_dir = new File("."); // the path being "." means current directory
         String[] all_files = file_handler.ListFiles();
-        ArrayList<String> all_txts = new ArrayList<String>();
+        ArrayList<String> all_txts = new ArrayList<>();
 
-        for(int i = 0; i < all_files.length; i++) {
+        for (String all_file : all_files) {
             //System.out.println("file: " + all_files[i]);
-            if (file_handler.accept(current_dir,all_files[i])){
-                System.out.println("adding file: " + all_files[i]);
-                all_txts.add(all_files[i]);
+            if (file_handler.accept(current_dir, all_file)) {
+                System.out.println("adding file: " + all_file);
+                all_txts.add(all_file);
             }
         }
 
@@ -88,7 +88,7 @@ public class AlbumDatabase {
             
             AlbumDatabase fr = new AlbumDatabase(all_txts.get(i));  //fr for file_reader
             System.out.println("Reading from file: " + fr.file_name);
-            ArrayList<String> file_contents = new ArrayList<String>(fr.get_file_content());
+            ArrayList<String> file_contents = new ArrayList<>(fr.get_file_content());
 
             // i have to use placeholder text so the object can be initialised so java will compile it. even though
             // it gets overwritten immediatly by the else statement
@@ -161,27 +161,8 @@ public class AlbumDatabase {
         
     }
 
-    public void output_file(){
-        // function isnt used much anymore, just for de-bugging at the start of the project.
-        // code copied and then modified from https://www.w3schools.com/java/java_files_read.asp
-        try {
-            File myObj = new File(this.file_name);  // changed the filename
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                System.out.println(data);
-                
-            }
-            myReader.close();
-            }
-        catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-    }
-
     public ArrayList<String> get_file_content(){
-        ArrayList<String> contents = new ArrayList<String>();
+        ArrayList<String> contents = new ArrayList<>();
 
         // code copied and then modified from https://www.w3schools.com/java/java_files_read.asp
         try {
