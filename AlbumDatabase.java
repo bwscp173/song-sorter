@@ -147,16 +147,49 @@ public class AlbumDatabase {
             
             //print each album in all_albums, arranging the songs into alphabetical order using comparable
             ArrayList<Album> all_albums_list = all_albums.get_Albums();
-            for (Album album : all_albums_list){
-                System.out.println("\n" + album.toString());
+            
+            Duration kraftwerkDuration = new Duration(0, 0, 0); // Creates a duration object for Kraftwerk albums
+            String shortestAlbumName = "PLACEHOLDERPLACEHOLDERPLACEHOLDER"; // Will hold the shortest album name - pasted PLACEHOLDER 3x to make sure
+                                                                            // it is longer than some names, otherwise there is a chance it will be
+                                                                            // shorter than all album names and will not be overwritten
+            Track longestTrack = new Track(new Duration(0, 0, 0), "PLACEHOLDER"); // Will hold the longest track
 
-                ArrayList<Track> tracks = album.get_track_obj();
-                Collections.sort(tracks, (track1, track2) -> track1.compareTo(track2));
+            for (Album album : all_albums_list){ // Iterates through each album
+
+                if (album.get_title().length() < shortestAlbumName.length()){ // Checks if current album is the shortest album name
+                    shortestAlbumName = album.get_title(); // If it is shorter, it replaces the current shortest name
+                }
+
+                if (album.get_artist().equals("Kraftwerk")) { // Only add duration if the artist is Kraftwerk
+                    Duration albumDuration = album.get_duration_obj();
+                    kraftwerkDuration.add_hr(albumDuration.get_hr()); // Adding the durations
+                    kraftwerkDuration.add_min(albumDuration.get_min());
+                    kraftwerkDuration.add_sec(albumDuration.get_sec());
+                };
+
+
+                System.out.println("\n" + album.toString()); // Prints the details of the album (e.g., 0:51:9::Pink Floyd : Momentary Lapse of Reason (1987))
+
+                ArrayList<Track> tracks = album.get_track_obj(); // Gets all tracks in the current album
+                Collections.sort(tracks, (track1, track2) -> track1.compareTo(track2)); // Sorts the tracks into alphabetical order
                 
-                for (Track track : tracks){
-                    System.out.println("\t" + track.toString());
+                for (Track track : tracks){ // Loops for each track in the album
+                    System.out.println("\t" + track.toString()); // Prints the track & its duration
+                    // Checks if the current track is longer than the longest track
+                    if (track.get_duration().get_hr() > longestTrack.get_duration().get_hr()){ // First checks the hours section of the timestamp
+                        longestTrack = track; // If the new track lasts for more hours, it is longer and replaces the current longest track
+                    }
+                    else if (track.get_duration().get_min() > longestTrack.get_duration().get_min()){ // checks minutes
+                        longestTrack = track; // Same as above except for minutes instead of hours
+                    }
+                    else if (track.get_duration().get_sec() > longestTrack.get_duration().get_sec()){ // checks seconds
+                        longestTrack = track; // Same as above except for seconds
+                    }
                 }
             }
+            System.out.println("\n\n\nTotal duration of Kraftwerk albums: " + kraftwerkDuration.toString()); // Prints final total duration of Kraftwerk albums
+            System.out.println("\nShortest album name: " + shortestAlbumName); // Prints the album with the shortest name
+            System.out.println("\nTrack with the longest duration: " + longestTrack.toString() + "\n\n"); // Prints the track with the longest duration
         }
         
     }
