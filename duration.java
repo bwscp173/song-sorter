@@ -39,6 +39,14 @@ public class Duration {
 
     @Override
     public String toString(){
-        return this.hr + ":" + this.min + ":" + this.sec;
+        String min = String.valueOf(this.min);
+        String sec = String.valueOf(this.sec);
+        if(min.length() == 1){
+            min= new String("0" + min);
+        };
+        if (sec.length() == 1) {
+            sec = new String("0" + sec);
+        };
+        return hr + ":" + min + ":" + sec;
     }
 }
