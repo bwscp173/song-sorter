@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 public class AlbumDatabase {
@@ -154,7 +155,17 @@ public class AlbumDatabase {
                                                                             // shorter than all album names and will not be overwritten
             Track longestTrack = new Track(new Duration(0, 0, 0), "PLACEHOLDER"); // Will hold the longest track
 
-            for (Album album : all_albums_list){ // Iterates through each album
+            List<Album> sortedAlbums = new ArrayList<>(all_albums_list);
+            Collections.sort(sortedAlbums, (album1, album2) -> {
+                int artistCompare = album1.get_artist().compareTo(album2.get_artist());
+                if (artistCompare == 0) {
+                    return Integer.compare(album1.get_year(), album2.get_year());
+                } else {
+                    return artistCompare;
+                }
+            });
+            
+            for (Album album : sortedAlbums){ // Iterates through each album
 
                 if (album.get_title().length() < shortestAlbumName.length()){ // Checks if current album is the shortest album name
                     shortestAlbumName = album.get_title(); // If it is shorter, it replaces the current shortest name
@@ -170,10 +181,7 @@ public class AlbumDatabase {
 
                 System.out.println("\n" + album.toString()); // Prints the details of the album (e.g., 0:51:9::Pink Floyd : Momentary Lapse of Reason (1987))
 
-                ArrayList<Track> tracks = album.get_track_obj(); // Gets all tracks in the current album
-                Collections.sort(tracks, (track1, track2) -> track1.compareTo(track2)); // Sorts the tracks into alphabetical order
-                
-                for (Track track : tracks){ // Loops for each track in the album
+                for (Track track : album.get_track_obj()){ // Loops for each track in the album
                     System.out.println("\t" + track.toString()); // Prints the track & its duration
                     // Checks if the current track is longer than the longest track
                     if (track.get_duration().get_hr() > longestTrack.get_duration().get_hr()){ // First checks the hours section of the timestamp
