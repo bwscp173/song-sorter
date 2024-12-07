@@ -150,9 +150,10 @@ public class AlbumDatabase {
             ArrayList<Album> all_albums_list = all_albums.get_Albums();
             
             Duration kraftwerkDuration = new Duration(0, 0, 0); // Creates a duration object for Kraftwerk albums
-            String shortestAlbumName = "PLACEHOLDERPLACEHOLDERPLACEHOLDER"; // Will hold the shortest album name - pasted PLACEHOLDER 3x to make sure
-                                                                            // it is longer than some names, otherwise there is a chance it will be
-                                                                            // shorter than all album names and will not be overwritten
+            Album shortestAlbumName = new Album("PLACEHOLDER", "PLACEHOLDERPLACEHOLDERPLACEHOLDER", 9999);
+                                                                        // Will hold the shortest album name - pasted PLACEHOLDER 3x to make sure
+                                                                        // it is longer than some names, otherwise there is a chance it will be
+                                                                        // shorter than all album names and will not be overwritten
             Track longestTrack = new Track(new Duration(0, 0, 0), "PLACEHOLDER"); // Will hold the longest track
 
             List<Album> sortedAlbums = new ArrayList<>(all_albums_list);
@@ -167,8 +168,11 @@ public class AlbumDatabase {
             
             for (Album album : sortedAlbums){ // Iterates through each album
 
-                if (album.get_title().length() < shortestAlbumName.length()){ // Checks if current album is the shortest album name
-                    shortestAlbumName = album.get_title(); // If it is shorter, it replaces the current shortest name
+                if (album.get_title().length() < shortestAlbumName.get_title().length()){ // Checks if current album is the shortest album name
+                    shortestAlbumName.set_title(album.get_title()); // If it is shorter, it replaces the current shortest name
+                    shortestAlbumName.set_year(album.get_year()); // fills in the other details of the album
+                    shortestAlbumName.set_artist(album.get_artist());
+                    shortestAlbumName.set_duration_obj(album.get_duration_obj());
                 }
 
                 if (album.get_artist().equals("Kraftwerk")) { // Only add duration if the artist is Kraftwerk

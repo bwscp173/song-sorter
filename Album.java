@@ -1,12 +1,11 @@
 import java.util.ArrayList;
 
 public class Album implements Comparable<Album> {
-    // vs code suggested that these should be final
-    private final String artist;
-    private final String title;  // will use the tostring method to collect the title from the track object
-    private final int year;
+    private String artist;
+    private String title;  // will use the tostring method to collect the title from the track object
+    private int year;
     private final ArrayList<Track> track_obj;
-    private final Duration duration_obj;
+    private Duration duration_obj;
 
     public Album(String artist, String title, int year){
         this.artist = artist;
@@ -28,12 +27,28 @@ public class Album implements Comparable<Album> {
         return this.year;
     }
 
+    public void set_title(String title){
+        this.title = title;
+    }
+
+    public void set_year(int year){
+        this.year = year;
+    }
+
+    public void set_duration_obj(Duration duration_obj){
+        this.duration_obj = duration_obj;
+    }
+
     public void add_track_obj(Track track_obj){
         this.track_obj.add(track_obj);
         Duration track_duration_obj = track_obj.get_duration();
         this.duration_obj.add_sec(track_duration_obj.get_sec());
         this.duration_obj.add_min(track_duration_obj.get_min());
         this.duration_obj.add_hr(track_duration_obj.get_hr());
+    }
+
+    public void set_artist(String artist){
+        this.artist = artist;
     }
 
     
