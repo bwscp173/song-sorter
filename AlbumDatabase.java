@@ -150,15 +150,12 @@ public class AlbumDatabase {
             ArrayList<Album> all_albums_list = all_albums.get_Albums();
             
             Duration kraftwerkDuration = new Duration(0, 0, 0); // Creates a duration object for Kraftwerk albums
-            Album shortestAlbumName = new Album("PLACEHOLDER", "PLACEHOLDERPLACEHOLDERPLACEHOLDER", 9999);
-                                                                        // Will hold the shortest album name - pasted PLACEHOLDER 3x to make sure
-                                                                        // it is longer than some names, otherwise there is a chance it will be
-                                                                        // shorter than all album names and will not be overwritten
+            Album shortestAlbumName = new Album("PLACEHOLDER", "PLACEHOLDERPLACEHOLDERPLACEHOLDER", 9999); // Will hold the shortest album name - pasted PLACEHOLDER 3x to make sure it is longer than some names, otherwise there is a chance it will be shorter than all album names and will not be overwritten
             Track longestTrack = new Track(new Duration(0, 0, 0), "PLACEHOLDER"); // Will hold the longest track
 
-            List<Album> sortedAlbums = new ArrayList<>(all_albums_list);
+            List<Album> sortedAlbums = new ArrayList<>(all_albums_list); // Creates a new arraylist for the sorted albums
             Collections.sort(sortedAlbums, (album1, album2) -> {
-                int artistCompare = album1.get_artist().compareTo(album2.get_artist());
+                int artistCompare = album1.get_artist().compareTo(album2.get_artist()); // Compares each album artist, 2 at a time
                 if (artistCompare == 0) {
                     return Integer.compare(album1.get_year(), album2.get_year());
                 } else {
