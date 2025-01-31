@@ -11,7 +11,7 @@ public class Album implements Comparable<Album> {
         this.artist = artist;
         this.title = title;
         this.year = year;
-        this.track_obj = new ArrayList<Track>();
+        this.track_obj = new ArrayList<>();
         this.duration_obj = new Duration(0, 0, 0);
     }
 
@@ -39,12 +39,23 @@ public class Album implements Comparable<Album> {
         this.duration_obj = duration_obj;
     }
 
+    public Integer get_hr(){
+        return this.duration_obj.get_hr();
+    }
+
+    public Integer get_min(){
+        return this.duration_obj.get_min();
+    }
+    
+    public Integer get_sec(){
+        return this.duration_obj.get_sec();
+    }
+
     public void add_track_obj(Track track_obj){
         this.track_obj.add(track_obj);
-        Duration track_duration_obj = track_obj.get_duration();
-        this.duration_obj.add_sec(track_duration_obj.get_sec());
-        this.duration_obj.add_min(track_duration_obj.get_min());
-        this.duration_obj.add_hr(track_duration_obj.get_hr());
+        this.duration_obj.add_sec(track_obj.get_sec());
+        this.duration_obj.add_min(track_obj.get_min());
+        this.duration_obj.add_hr(track_obj.get_hr());
     }
 
     public void set_artist(String artist){
@@ -56,8 +67,8 @@ public class Album implements Comparable<Album> {
         return this.track_obj;
     }
 
-    public Duration get_duration_obj(){
-        return this.duration_obj;
+    public String get_duration(){
+        return this.duration_obj.toString();
     }
     
 

@@ -1,3 +1,8 @@
+
+import java.util.ArrayList;
+
+
+//vs code wanted this line.
 public class Track implements Comparable<Track>{
     private final Duration duration_object;
     private String title;
@@ -14,8 +19,22 @@ public class Track implements Comparable<Track>{
         this.title = new_title;
     }
 
-    public Duration get_duration(){
-        return this.duration_object;
+    public ArrayList<Integer> get_duration(){
+        ArrayList<Integer> time = new ArrayList<>();
+        time.add(this.duration_object.get_hr());
+        time.add(this.duration_object.get_min());
+        time.add(this.duration_object.get_sec());
+        return time;
+    }
+
+    public Integer get_hr(){
+        return this.duration_object.get_hr();
+    }
+    public Integer get_min(){
+        return this.duration_object.get_min();
+    }
+    public Integer get_sec(){
+        return this.duration_object.get_sec();
     }
 
     @Override

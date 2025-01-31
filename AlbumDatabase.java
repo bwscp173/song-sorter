@@ -70,72 +70,53 @@ public class AlbumDatabase {
     }
 
     public static void main(String[] args) {
-        FileLocator file_handler = new FileLocator();
-        file_handler.set_extension(".txt");
-        File current_dir = new File("."); // the path being "." means current directory
-        String[] all_files = file_handler.ListFiles();
-        ArrayList<String> all_txts = new ArrayList<>();
+        
+        AlbumDatabase fr = new AlbumDatabase("albums.txt");  //fr for file_reader
+        System.out.println("Reading from file: " + fr.file_name);
+        ArrayList<String> file_contents = new ArrayList<>(fr.get_file_content());
 
-        for (String all_file : all_files) {
-            //System.out.println("file: " + all_files[i]);
-            if (file_handler.accept(current_dir, all_file)) {
-                System.out.println("adding file: " + all_file);
-                all_txts.add(all_file);
+        // i have to use placeholder text so the object can be initialised so java will compile it. even though
+        // it gets overwritten immediatly by the else statement
+        Album current_album = new Album("PLACEHOLDER", "PLACEHOLDER", 9999);  // stores the most recently seen album to append the track to
+        AlbumCollection all_albums = new AlbumCollection();
+
+        for (int j=0; j<file_contents.size();j++){
+            String current_line = file_contents.get(j);
+
+            if (current_line.length() == 0){
+                continue;
             }
-        }
+            
 
-        for (int i = 0; i < all_txts.size(); i++) {
+            // The Beatles : Rubber Soul (1965)
+            // 0:02:25 - Drive My Car
+            // for example these next lines will check for the first space starting from the left.
+            // then it will go back 3 characters, if this is a ':' then it has to be a song
+            // else it will be a artists name
+            // doing it this way because of a small edge case where the artists name starts with a number so we cant check if the first character is a number
+            // cant check the location of the string for a ":" at a static position because there is a small edge case for a +10hr song/albumcollection.
             
             
-            AlbumDatabase fr = new AlbumDatabase(all_txts.get(i));  //fr for file_reader
-            System.out.println("Reading from file: " + fr.file_name);
-            ArrayList<String> file_contents = new ArrayList<>(fr.get_file_content());
+            // todo: decide if this first_space index should be put into the is_track and handle_track functions
+            // as it looks nicer if its put inside the function not as a augument, But its wasted data if it is.
+            int first_space_index = current_line.indexOf(" ");
 
-            // i have to use placeholder text so the object can be initialised so java will compile it. even though
-            // it gets overwritten immediatly by the else statement
-            Album current_album = new Album("PLACEHOLDER", "PLACEHOLDER", 9999);  // stores the most recently seen album to append the track to
-            AlbumCollection all_albums = new AlbumCollection();
+            
+            if(null == is_track(current_line, first_space_index)){}
 
-            for (int j=0; j<file_contents.size();j++){
-                String current_line = file_contents.get(j);
-
-                if (current_line.length() == 0){
-                    continue;
-                }
-                
-
-                // The Beatles : Rubber Soul (1965)
-                // 0:02:25 - Drive My Car
-                // for example these next lines will check for the first space starting from the left.
-                // then it will go back 3 characters, if this is a ':' then it has to be a song
-                // else it will be a artists name
-                // doing it this way because of a small edge case where the artists name starts with a number so we cant check if the first character is a number
-                // cant check the location of the string for a ":" at a static position because there is a small edge case for a +10hr song/albumcollection.
-                
-                
-                // todo: decide if this first_space index should be put into the is_track and handle_track functions
-                // as it looks nicer if its put inside the function not as a augument, But its wasted data if it is.
-                int first_space_index = current_line.indexOf(" ");
-
-                
-                // if the line is empty, ignore the line
-                if(is_track(current_line, first_space_index) == null){
-                    continue;
-                }
-
-
-                else if (is_track(current_line, first_space_index) == true){
+            else // if the line is empty, ignore the line
+            switch (is_track(current_line, first_space_index)) {
+                case true -> {
                     // it must be a track
                     try {
                         handle_track(current_line, first_space_index, current_album);
                     }
                     catch (java.lang.StringIndexOutOfBoundsException e) {
-                        // this error occurs because the first_space_index 
+                        // this error occurs because the first_space_index
                         System.out.println("[ERROR] Line(" + j + ") from file('" + fr.file_name + "'') is in a incorrect format");
                     }
                 }
-
-                else if (is_track(current_line, first_space_index) == false){
+                case false -> {
                     // else it must be a album
                     try {
                         current_album = handle_album(current_line, all_albums);
@@ -145,63 +126,64 @@ public class AlbumDatabase {
                     }
                 }
             }
-            
-            //print each album in all_albums, arranging the songs into alphabetical order using comparable
-            ArrayList<Album> all_albums_list = all_albums.get_Albums();
-            
-            Duration kraftwerkDuration = new Duration(0, 0, 0); // Creates a duration object for Kraftwerk albums
-            Album shortestAlbumName = new Album("PLACEHOLDER", "PLACEHOLDERPLACEHOLDERPLACEHOLDER", 9999); // Will hold the shortest album name - pasted PLACEHOLDER 3x to make sure it is longer than some names, otherwise there is a chance it will be shorter than all album names and will not be overwritten
-            Track longestTrack = new Track(new Duration(0, 0, 0), "PLACEHOLDER"); // Will hold the longest track
-
-            List<Album> sortedAlbums = new ArrayList<>(all_albums_list); // Creates a new arraylist for the sorted albums
-            Collections.sort(sortedAlbums, (album1, album2) -> {
-                int artistCompare = album1.get_artist().compareTo(album2.get_artist()); // Compares each album artist, 2 at a time
-                if (artistCompare == 0) {
-                    return Integer.compare(album1.get_year(), album2.get_year());
-                } else {
-                    return artistCompare;
-                }
-            });
-            
-            for (Album album : sortedAlbums){ // Iterates through each album
-
-                if (album.get_title().length() < shortestAlbumName.get_title().length()){ // Checks if current album is the shortest album name
-                    shortestAlbumName.set_title(album.get_title()); // If it is shorter, it replaces the current shortest name
-                    shortestAlbumName.set_year(album.get_year()); // fills in the other details of the album
-                    shortestAlbumName.set_artist(album.get_artist());
-                    shortestAlbumName.set_duration_obj(album.get_duration_obj());
-                }
-
-                if (album.get_artist().equals("Kraftwerk")) { // Only add duration if the artist is Kraftwerk
-                    Duration albumDuration = album.get_duration_obj();
-                    kraftwerkDuration.add_hr(albumDuration.get_hr()); // Adding the durations
-                    kraftwerkDuration.add_min(albumDuration.get_min());
-                    kraftwerkDuration.add_sec(albumDuration.get_sec());
-                };
-
-
-                System.out.println("\n" + album.toString()); // Prints the details of the album (e.g., 0:51:9::Pink Floyd : Momentary Lapse of Reason (1987))
-
-                for (Track track : album.get_track_obj()){ // Loops for each track in the album
-                    System.out.println("\t" + track.toString()); // Prints the track & its duration
-                    // Checks if the current track is longer than the longest track
-                    if (track.get_duration().get_hr() > longestTrack.get_duration().get_hr()){ // First checks the hours section of the timestamp
-                        longestTrack = track; // If the new track lasts for more hours, it is longer and replaces the current longest track
-                    }
-                    else if (track.get_duration().get_min() > longestTrack.get_duration().get_min()){ // checks minutes
-                        longestTrack = track; // Same as above except for minutes instead of hours
-                    }
-                    else if (track.get_duration().get_sec() > longestTrack.get_duration().get_sec()){ // checks seconds
-                        longestTrack = track; // Same as above except for seconds
-                    }
-                }
-            }
-            System.out.println("\n\n\nTotal duration of Kraftwerk albums: " + kraftwerkDuration.toString()); // Prints final total duration of Kraftwerk albums
-            System.out.println("\nShortest album name: " + shortestAlbumName); // Prints the album with the shortest name
-            System.out.println("\nTrack with the longest duration: " + longestTrack.toString() + "\n\n"); // Prints the track with the longest duration
         }
         
+        //print each album in all_albums, arranging the songs into alphabetical order using comparable
+        ArrayList<Album> all_albums_list = all_albums.get_Albums();
+        
+        Duration kraftwerkDuration = new Duration(0, 0, 0); // Creates a duration object for Kraftwerk albums
+        Album shortestAlbumName = new Album("PLACEHOLDER", "PLACEHOLDERPLACEHOLDERPLACEHOLDER", 9999); // Will hold the shortest album name - pasted PLACEHOLDER 3x to make sure it is longer than some names, otherwise there is a chance it will be shorter than all album names and will not be overwritten
+        Track longestTrack = new Track(new Duration(0, 0, 0), "PLACEHOLDER"); // Will hold the longest track
+
+        List<Album> sortedAlbums = new ArrayList<>(all_albums_list); // Creates a new arraylist for the sorted albums
+        Collections.sort(sortedAlbums, (album1, album2) -> {
+            int artistCompare = album1.get_artist().compareTo(album2.get_artist()); // Compares each album artist, 2 at a time
+            if (artistCompare == 0) {
+                return Integer.compare(album1.get_year(), album2.get_year());
+            } else {
+                return artistCompare;
+            }
+        });
+        
+        for (Album album : sortedAlbums){ // Iterates through each album
+
+            if (album.get_title().length() < shortestAlbumName.get_title().length()){ // Checks if current album is the shortest album name
+                shortestAlbumName.set_title(album.get_title()); // If it is shorter, it replaces the current shortest name
+                shortestAlbumName.set_year(album.get_year()); // fills in the other details of the album
+                shortestAlbumName.set_artist(album.get_artist());
+                Duration new_dur = new Duration(album.get_hr(), album.get_min(), album.get_sec());
+                shortestAlbumName.set_duration_obj(new_dur);
+            }
+
+            if (album.get_artist().equals("Kraftwerk")) { // Only add duration if the artist is Kraftwerk
+                //Duration albumDuration = new Duration(album.get_duration_obj());
+                kraftwerkDuration.add_hr(album.get_hr()); // Adding the durations
+                kraftwerkDuration.add_min(album.get_min());
+                kraftwerkDuration.add_sec(album.get_sec());
+            }
+
+
+            System.out.println("\n" + album.toString()); // Prints the details of the album (e.g., 0:51:9::Pink Floyd : Momentary Lapse of Reason (1987))
+
+            for (Track track : album.get_track_obj()){ // Loops for each track in the album
+                System.out.println("\t" + track.toString()); // Prints the track & its duration
+                // Checks if the current track is longer than the longest track
+                if (track.get_hr() > longestTrack.get_hr()){ // First checks the hours section of the timestamp
+                    longestTrack = track; // If the new track lasts for more hours, it is longer and replaces the current longest track
+                }
+                else if (track.get_min() > longestTrack.get_min()){ // checks minutes
+                    longestTrack = track; // Same as above except for minutes instead of hours
+                }
+                else if (track.get_sec() > longestTrack.get_sec()){ // checks seconds
+                    longestTrack = track; // Same as above except for seconds
+                }
+            }
+        }
+        System.out.println("\n\n\nTotal duration of Kraftwerk albums: " + kraftwerkDuration.toString()); // Prints final total duration of Kraftwerk albums
+        System.out.println("\nShortest album name: " + shortestAlbumName); // Prints the album with the shortest name
+        System.out.println("\nTrack with the longest duration: " + longestTrack.toString() + "\n\n"); // Prints the track with the longest duration
     }
+        
 
     public ArrayList<String> get_file_content(){
         ArrayList<String> contents = new ArrayList<>();
@@ -209,18 +191,18 @@ public class AlbumDatabase {
         // code copied and then modified from https://www.w3schools.com/java/java_files_read.asp
         try {
             File myObj = new File(this.file_name);  // changed the filename
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String current_line = myReader.nextLine();
-                
-                contents.add(current_line);  // added this line
+            try(Scanner myReader = new Scanner(myObj)){
+                while (myReader.hasNextLine()) {
+                    String current_line = myReader.nextLine();
+                    
+                    contents.add(current_line);  // added this line
 
-            }
-            myReader.close();
+                }
+                myReader.close();
+                }
             }
         catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            System.out.println("file not found" + this.file_name);
         }
         return contents;
     }

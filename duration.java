@@ -1,7 +1,7 @@
 //this class will be used for storing the duration of either a:
 //Track, Album, or Album collection
 public class Duration {
-    private int hr;
+    private int hr;  // cannot use the final keywork
     private int min;
     private int sec;
 
@@ -39,15 +39,15 @@ public class Duration {
 
     @Override
     public String toString(){
-        String hr = String.valueOf(this.hr);
-        String min = String.valueOf(this.min);
-        String sec = String.valueOf(this.sec);
-        if(min.length() == 1){
-            min= new String("0" + min);
-        };
-        if (sec.length() == 1) {
-            sec = new String("0" + sec);
-        };
-        return hr + ":" + min + ":" + sec;
+        String strHr = String.valueOf(this.hr);  // need to use this String.ValueOf function as this.hr is starting as a int and must change to a
+        String strMin = String.valueOf(this.min);
+        String strSec = String.valueOf(this.sec);
+        if(strMin.length() == 1){
+            strMin= "0" + min;
+        }
+        if (strSec.length() == 1) {
+            strSec = "0" + sec;
+        }
+        return strHr + ":" + strMin + ":" + strSec;
     }
 }

@@ -18,12 +18,9 @@ public class AlbumCollection {
     }
 
     public void handle_duration(Album album_object){
-        
-        Duration duration_to_add = album_object.get_duration_obj();  // so im not making constant calls to this method
-
-        this.duration_obj.add_hr(duration_to_add.get_hr());
-        this.duration_obj.add_min(duration_to_add.get_min());
-        this.duration_obj.add_sec(duration_to_add.get_sec());
+        this.duration_obj.add_hr(album_object.get_hr());
+        this.duration_obj.add_min(album_object.get_min());
+        this.duration_obj.add_sec(album_object.get_sec());
     }
 
     public ArrayList<Album> get_Albums(){
